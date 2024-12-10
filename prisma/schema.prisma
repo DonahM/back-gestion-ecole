@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model classE{
+  idCls      Int        @id @default(autoincrement())
+  name       String     @db.VarChar(255)
+  content    String     @db.VarChar(255)
+  annee      String     @db.VarChar(255)
+  etudiants  etudiants[]
+}
+
+model etudiants{
+  idEdt      Int         @id @default(autoincrement())
+  name       String     @db.VarChar(255)
+  surname    String     @db.VarChar(255)
+  age        Int
+  image      String     @db.VarChar(255)
+  idCls      Int
+  classE     classE?    @relation(fields: [idCls], references: [idCls], onDelete: NoAction, onUpdate: NoAction, map: "FK_FF5CCDBE26EF07C9")
+}
