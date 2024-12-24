@@ -8,20 +8,131 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model user{
+  idUser      Int        @id @default(autoincrement())
+  name        String     @db.VarChar(255)
+  surname     String     @db.VarChar(255)
+  cin         String     @db.VarChar(255)
+  email       String     @db.VarChar(255)
+  roles       String     @db.VarChar(255)
+  password    String     @db.VarChar(255)
+}
+
 model classE{
-  idCls      Int        @id @default(autoincrement())
-  name       String     @db.VarChar(255)
-  content    String     @db.VarChar(255)
-  annee      String     @db.VarChar(255)
-  etudiants  etudiants[]
+  idCls       Int        @id @default(autoincrement())
+  name        String     @db.VarChar(255)
+  titulaire   String     @db.VarChar(255)
+  num         String     @db.VarChar(255)
+  idSchool          Int
+  years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+  etudiants   etudiants[]
 }
 
 model etudiants{
-  idEdt      Int         @id @default(autoincrement())
-  name       String     @db.VarChar(255)
-  surname    String     @db.VarChar(255)
-  age        Int
-  image      String     @db.VarChar(255)
-  idCls      Int
-  classE     classE?    @relation(fields: [idCls], references: [idCls], onDelete: NoAction, onUpdate: NoAction, map: "FK_FF5CCDBE26EF07C9")
+  idEdt             Int        @id @default(autoincrement())
+  name              String     @db.VarChar(255)
+  surname           String     @db.VarChar(255)
+  date_naiss        String     @db.VarChar(255)
+  lieu_naiss        String     @db.VarChar(255)
+  sexe              String     @db.VarChar(255)
+  tel               String     @db.VarChar(255)
+  adress_edt        String     @db.VarChar(255)
+  father            String     @db.VarChar(255)
+  jobs_f            String     @db.VarChar(255)
+  mother            String     @db.VarChar(255)
+  jobs_m            String     @db.VarChar(255)
+  tel_parent        String     @db.VarChar(255)
+  adresse_parent    String     @db.VarChar(255)
+  titeur            String     @db.VarChar(255)
+  tel_titeur        String     @db.VarChar(255)
+  adress_titeur     String     @db.VarChar(255)
+  ecole_anter       String     @db.VarChar(255)
+  image             String     @db.VarChar(255)
+  password          String     @db.VarChar(255)
+  idCls             Int
+  classE            classE?    @relation(fields: [idCls], references: [idCls], onDelete: NoAction, onUpdate: NoAction)
+  idSchool          Int
+  years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+  ecolages          ecolages[]
+  matieres          matieres[]
+  notes             notes[]
 }
+
+model ecolages{
+  idEco           Int           @id @default(autoincrement())
+  mois            String        @db.VarChar(255)
+  valeur          Int
+  statut          String        @db.VarChar(255)
+  date            String        @db.VarChar(255)
+  idEdt           Int
+  etudiants       etudiants?    @relation(fields: [idEdt], references: [idEdt], onDelete: NoAction, onUpdate: NoAction)
+  idSchool          Int
+  years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model professeurs{
+  idProf          Int         @id @default(autoincrement())
+  name            String      @db.VarChar(255)
+  surname         String      @db.VarChar(255)
+  matiere         String      @db.VarChar(255)
+  idSchool          Int
+  years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+  salaires        salaires[]
+}
+
+model salaires{
+  idSal           Int         @id @default(autoincrement())
+  mois            String      @db.VarChar(255)
+  statut          String      @db.VarChar(255)
+  valeur          Int
+  date            String      @db.VarChar(255)
+  idProf          Int
+  professeurs     professeurs?    @relation(fields: [idProf], references: [idProf], onDelete: NoAction, onUpdate: NoAction)
+  idSchool          Int
+  years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+}
+
+ model matieres{
+  idMat         Int           @id @default(autoincrement())
+  name          String        @db.VarChar(225)
+  idEdt         Int
+  etudiants     etudiants?    @relation(fields: [idEdt], references: [idEdt], onDelete: NoAction, onUpdate: NoAction)
+  idSchool          Int
+  years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+  notes         notes[]
+ }
+
+ model notes{
+  idNot         Int           @id @default(autoincrement())
+  note          Int
+  coefficient   Int 
+  idEdt         Int
+  idMat         Int
+  etudiants     etudiants?    @relation(fields: [idEdt], references: [idEdt], onDelete: NoAction, onUpdate: NoAction)
+  matieres      matieres?     @relation(fields: [idMat], references: [idMat], onDelete: NoAction, onUpdate: NoAction)
+  idSchool          Int
+  years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+  idSem         Int
+  semestre     semestre?    @relation(fields: [idSem], references: [idSem], onDelete: NoAction, onUpdate: NoAction)
+ }
+
+model semestre{
+  idSem           Int           @id @default(autoincrement())
+  name            String        @db.VarChar(255)
+  idSchool          Int
+  years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+  notes           notes[]
+}
+
+ model years_schools{
+  idSchool          Int           @id @default(autoincrement())
+  annee_scolaire    String        @db.VarChar(255)
+  etudiants         etudiants[]
+  ecolages          ecolages[]
+  matieres          matieres[]
+  notes             notes[]
+  salaires          salaires[]
+  classE            classE[]
+  professeurs       professeurs[]
+  semestre          semestre[]
+ }

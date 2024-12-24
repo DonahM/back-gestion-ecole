@@ -1,21 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber,IsString, IsOptional } from 'class-validator';
 
-export class CreateClassesDto {
+export class CreateSalairesDto {
   @IsNotEmpty()
   @ApiProperty()
   @IsString()
-  name: string;
+  mois: string;
 
   @IsNotEmpty()
   @ApiProperty()
   @IsString()
-  titulaire: string;
+  statut: string;
+
+  @IsNumber()
+  @ApiProperty()
+  @IsOptional()
+  valeur: number;
 
   @IsNotEmpty()
   @ApiProperty()
   @IsString()
-  num: string;
+  date: string;
+
+  @IsNumber()
+  @ApiProperty()
+  @IsOptional()
+  idProf: number;
 
   @IsNumber()
   @ApiProperty()

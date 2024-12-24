@@ -17,6 +17,7 @@ import {
   import { CreateEtudiantsDto } from './dto/create-etudiants.dto';
   import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express/multer';
   import UploadFileUsecase from 'src/core/usecases/upload_file_usecase';
+import { UpdateEtudiantsDto } from './dto/update-etudiants.dto';
 
 @Controller('etudiants')
 export class EtudiantsController {
@@ -62,8 +63,8 @@ export class EtudiantsController {
   }
 
   @Get('/etudiants/:id')
-  async findByGenre(@Param('id') idEdt: number): Promise<etudiants[]> {
-    return this.etudiantsService.findByGenre(+idEdt);
+  async findByEtudiants(@Param('id') idEdt: number): Promise<etudiants[]> {
+    return this.etudiantsService.findByEtudiants(+idEdt);
   }
 
   @Get('/count')
@@ -71,15 +72,31 @@ export class EtudiantsController {
     return this.etudiantsService.count();
   }
 
+  @Patch(':id')
+  async update(@Param('id') IdEdt: number, @Body() updateEtudiantsDto: UpdateEtudiantsDto) {
+    return this.etudiantsService.update(+IdEdt, updateEtudiantsDto);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') idEdt: string) {
+  const id = parseInt(idEdt, 10); // Convertir l'ID en nombre
+  if (isNaN(id)) {
+    throw new HttpException('Invalid ID format', 400); // Gérer les ID invalides
+  }
+  return this.etudiantsService.findOne(id);
+}
+
+  
+
   @Delete(':id')
   remove(@Param('id') IdCom: string) {
     return this.etudiantsService.remove(+IdCom);
   }
 
-  @Patch(':id')
-  @UseInterceptors(FileInterceptor('file'))
-  update(
-    @Param('id') id: string,
-    @UploadedFile() file: Express.Multer.File,
-  ) {}
+  // @Patch(':id')
+  // @UseInterceptors(FileInterceptor('file'))
+  // update(
+  //   @Param('id') id: string,
+  //   @UploadedFile() file: Express.Multer.File,
+  // ) {}
 }

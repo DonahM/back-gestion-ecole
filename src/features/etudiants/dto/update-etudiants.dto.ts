@@ -1,38 +1,41 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString ,IsOptional } from 'class-validator';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import {  IsString ,IsOptional, IsNumber } from 'class-validator';
+import { CreateEtudiantsDto } from './create-etudiants.dto';
 
-export class CreateEtudiantsDto {
-  @IsNotEmpty()
+export class  UpdateEtudiantsDto extends PartialType(CreateEtudiantsDto){
+  @IsString()
+  @IsOptional()
   @ApiProperty()
   name: string;
 
-  @IsNotEmpty()
+  @IsString()
+  @IsOptional()
   @ApiProperty()
   surname: string;
 
-  @IsNotEmpty()
-  @ApiProperty()
   @IsString()
+  @IsOptional()
+  @ApiProperty()
   date_naiss: string;
 
-  @IsNotEmpty()
-  @ApiProperty()
   @IsString()
+  @IsOptional()
+  @ApiProperty()
   lieu_naiss: string;
 
-  @IsNotEmpty()
-  @ApiProperty()
   @IsString()
+  @IsOptional()
+  @ApiProperty()
   sexe : string;
 
-  @IsNotEmpty()
-  @ApiProperty()
   @IsString()
+  @IsOptional()
+  @ApiProperty()
   tel: string;
 
-  @IsNotEmpty()
-  @ApiProperty()
   @IsString()
+  @IsOptional()
+  @ApiProperty()
   adress_edt: string;
 
   @IsOptional()
@@ -45,22 +48,22 @@ export class CreateEtudiantsDto {
   @IsString()
   jobs_f: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty()
   @IsString()
   mother: string;
   
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty()
   @IsString()
   jobs_m: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty()
   @IsString()
   tel_parent: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty()
   @IsString()
   adresse_parent: string;
@@ -80,27 +83,18 @@ export class CreateEtudiantsDto {
   @IsString()
   adress_titeur: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @ApiProperty()
   @IsString()
   ecole_anter: string;
 
-  @IsString()
+  @IsOptional()
   @ApiProperty()
+  @IsString()
   image: string;
-
-  @IsNotEmpty()
-  @ApiProperty()
-  @IsString()
-  password: string;
   
   @IsNumber()
   @ApiProperty()
   @IsOptional()
   idCls: number;
-
-  @IsNumber()
-  @ApiProperty()
-  @IsOptional()
-  idSchool: number;
 }

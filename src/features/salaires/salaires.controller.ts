@@ -11,26 +11,26 @@ import { Controller,
     HttpException,
  } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ClassesService } from './classes.service';
-import { CreateClassesDto } from './dto/create-classes.dto';
+import { SalairesService } from './salaires.service';
+import { CreateSalairesDto } from './dto/create-salaires.dto';
 
-@Controller('classes')
-export class ClassesController {
-    constructor(private readonly classesService: ClassesService) {}
+@Controller('salaires')
+export class SalairesController {
+    constructor(private readonly salairesService: SalairesService) {}
 
   @Post()
-  async create(@Body() dto: CreateClassesDto) {
-    return this.classesService.create(dto)
+  async create(@Body() dto: CreateSalairesDto) {
+    return this.salairesService.create(dto)
   }
 
   @Get()
   findAll(){
-    return this.classesService.findAll()
+    return this.salairesService.findAll()
   }
 
   @Get(':id')
   findOne(@Param('id') idCls: string) {
-    return this.classesService.findOne(+idCls);
+    return this.salairesService.findOne(+idCls);
   }
 
   @Patch(':id')
@@ -40,12 +40,11 @@ export class ClassesController {
 
   @Delete(':id')
   async remove(@Param('id') idCls: string) {
-    return this.classesService.remove(+idCls);
+    return this.salairesService.remove(+idCls);
   }
 
   @Get('/count')
   async count(): Promise<number> {
-    return this.classesService.count();
+    return this.salairesService.count();
   }
-
 }

@@ -11,26 +11,26 @@ import { Controller,
     HttpException,
  } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ClassesService } from './classes.service';
-import { CreateClassesDto } from './dto/create-classes.dto';
+import { MatieresService } from './matieres.service';
+import { CreateMatieresDto } from './dto/create-matieres.dto';
 
-@Controller('classes')
-export class ClassesController {
-    constructor(private readonly classesService: ClassesService) {}
+@Controller('matieres')
+export class MatieresController {
+    constructor(private readonly matieresservice: MatieresService) {}
 
   @Post()
-  async create(@Body() dto: CreateClassesDto) {
-    return this.classesService.create(dto)
+  async create(@Body() dto: CreateMatieresDto) {
+    return this.matieresservice.create(dto)
   }
 
   @Get()
   findAll(){
-    return this.classesService.findAll()
+    return this.matieresservice.findAll()
   }
 
   @Get(':id')
   findOne(@Param('id') idCls: string) {
-    return this.classesService.findOne(+idCls);
+    return this.matieresservice.findOne(+idCls);
   }
 
   @Patch(':id')
@@ -40,12 +40,12 @@ export class ClassesController {
 
   @Delete(':id')
   async remove(@Param('id') idCls: string) {
-    return this.classesService.remove(+idCls);
+    return this.matieresservice.remove(+idCls);
   }
 
   @Get('/count')
   async count(): Promise<number> {
-    return this.classesService.count();
+    return this.matieresservice.count();
   }
 
 }

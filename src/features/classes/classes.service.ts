@@ -15,8 +15,9 @@ export class ClassesService {
       const classE = await this.prismaService.classE.create({
         data: {
           name: createClassesDto.name,
-          content: createClassesDto.content,
-          annee: createClassesDto.annee
+          titulaire: createClassesDto.titulaire,
+          num: createClassesDto.num,
+          idSchool: createClassesDto.idSchool
         },
       });
       return classE;
@@ -31,6 +32,7 @@ export class ClassesService {
         {
           include:{
             etudiants:true,
+            years_schools: true,
           },
         }
       );
@@ -45,6 +47,9 @@ export class ClassesService {
       const classes = await this.prismaService.classE.findUniqueOrThrow({
         where: {
           idCls: idCls,
+        },
+        include: {
+          years_schools: true,
         },
       });
       return classes;
