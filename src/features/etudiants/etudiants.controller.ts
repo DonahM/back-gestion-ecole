@@ -11,6 +11,7 @@ import {
     UploadedFile,
     UploadedFiles,
     UseInterceptors,
+    ParseIntPipe 
   } from '@nestjs/common';
   import { EtudiantsService } from './etudiants.service';
   import { etudiants} from '@prisma/client';
@@ -65,6 +66,11 @@ export class EtudiantsController {
   @Get('/etudiants/:id')
   async findByEtudiants(@Param('id') idEdt: number): Promise<etudiants[]> {
     return this.etudiantsService.findByEtudiants(+idEdt);
+  }
+
+  @Get('matricule/:matricule')
+  async findByMatricule(@Param('matricule', ParseIntPipe) matricule: number): Promise<etudiants[]> {
+    return this.etudiantsService.findByMatricule(matricule);
   }
 
   @Get('/count')

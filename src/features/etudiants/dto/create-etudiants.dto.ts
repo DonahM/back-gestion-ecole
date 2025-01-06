@@ -35,6 +35,11 @@ export class CreateEtudiantsDto {
   @IsString()
   adress_edt: string;
 
+  @IsNotEmpty()
+  @ApiProperty()
+  @IsNumber()
+  matricule: number;
+
   @IsOptional()
   @ApiProperty()
   @IsString()

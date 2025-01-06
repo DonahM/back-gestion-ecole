@@ -4,6 +4,7 @@ import { etudiants } from '@prisma/client';
 import { join } from 'path';
 import { PrismaService } from 'src/features/prisma/prisma.service';
 import * as fs from 'fs';
+import * as argon2 from 'argon2';
 import { CreateEtudiantsDto } from './dto/create-etudiants.dto';
 import exception from 'src/core/errors/error_handler';
 import { UpdateEtudiantsDto } from './dto/update-etudiants.dto';
@@ -61,6 +62,7 @@ export class EtudiantsService {
         dto: CreateEtudiantsDto,
       ): Promise<etudiants | HttpException> {
         try {
+          const hashedPassword = await argon2.hash(dto.password);
           const db = await this.prismaService.etudiants.create({
             data: {
               name: dto.name,
@@ -70,6 +72,7 @@ export class EtudiantsService {
               sexe: dto.sexe,
               tel: dto.tel,
               adress_edt: dto.adress_edt,
+              matricule: dto.matricule,
               father: dto.father,
               jobs_f : dto.jobs_f,
               mother : dto.mother,
@@ -81,7 +84,7 @@ export class EtudiantsService {
               adress_titeur: dto.adress_titeur,
               ecole_anter : dto.ecole_anter ,
               image: dto.image,
-              password: dto.password,
+              password: hashedPassword,
               idCls: dto.idCls,
               idSchool: dto.idSchool
             },
@@ -109,12 +112,12 @@ export class EtudiantsService {
         }
       }
     
-      async findByEtudiants(idCls: number): Promise<etudiants[]> {
+      async findByEtudiants(idEdt: number): Promise<etudiants[]> {
         try {
           const etudiants = await this.prismaService.etudiants.findMany({
             where: {
-              idCls: {
-                equals: idCls,
+              idEdt: {
+                equals: idEdt,
               },
             },
             include: {
@@ -126,7 +129,21 @@ export class EtudiantsService {
           throw exception(error);
         }
       }
-    
+      
+      async findByMatricule(matricule: number): Promise<etudiants[]> {
+        try {
+          const etudiants = await this.prismaService.etudiants.findMany({
+            where: {
+              matricule: {
+                equals: matricule,
+              },
+            },
+          });
+          return etudiants;
+        } catch (error) {
+          throw exception(error);
+        }
+      }
     
       async findOne(idEdt: number) {
         try {
@@ -164,6 +181,7 @@ export class EtudiantsService {
               sexe: updateEtudiantsDto.sexe,
               tel: updateEtudiantsDto.tel,
               adress_edt: updateEtudiantsDto.adress_edt,
+              matricule: updateEtudiantsDto.matricule,
               father: updateEtudiantsDto.father,
               jobs_f : updateEtudiantsDto.jobs_f,
               mother : updateEtudiantsDto.mother,

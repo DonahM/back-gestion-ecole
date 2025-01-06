@@ -8,6 +8,9 @@ import { ProfesseursModule } from './features/proffesseurs/professeurs.module';
 import { MatieresModule } from './features/matieres/matieres.module';
 import { NotesModule } from './features/notes/notes.module';
 import { YearsSchoolModule } from './features/years_school/years_school.module';
+import { AuthClientModule } from './features/auth-client/auth-client.module';
+import { UserModule } from './features/user/user.module';
+import { AuthModule } from './features/auth/auth.module';
 
 @Module({
   imports: [
@@ -19,7 +22,10 @@ import { YearsSchoolModule } from './features/years_school/years_school.module';
     ProfesseursModule,
     MatieresModule,
     NotesModule,
-    YearsSchoolModule
+    YearsSchoolModule,
+    AuthClientModule,
+    UserModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],

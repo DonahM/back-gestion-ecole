@@ -15,6 +15,8 @@ model user{
   cin         String     @db.VarChar(255)
   email       String     @db.VarChar(255)
   roles       String     @db.VarChar(255)
+  logo        String     @db.VarChar(255)
+  lieu        String     @db.VarChar(255)
   password    String     @db.VarChar(255)
 }
 
@@ -36,6 +38,7 @@ model etudiants{
   lieu_naiss        String     @db.VarChar(255)
   sexe              String     @db.VarChar(255)
   tel               String     @db.VarChar(255)
+  matricule         Int        @unique
   adress_edt        String     @db.VarChar(255)
   father            String     @db.VarChar(255)
   jobs_f            String     @db.VarChar(255)
@@ -49,7 +52,7 @@ model etudiants{
   ecole_anter       String     @db.VarChar(255)
   image             String     @db.VarChar(255)
   password          String     @db.VarChar(255)
-  idCls             Int
+  idCls             Int        
   classE            classE?    @relation(fields: [idCls], references: [idCls], onDelete: NoAction, onUpdate: NoAction)
   idSchool          Int
   years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
