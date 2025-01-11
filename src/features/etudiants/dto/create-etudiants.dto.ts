@@ -108,4 +108,9 @@ export class CreateEtudiantsDto {
   @ApiProperty()
   @IsOptional()
   idSchool: number;
+
+  @IsNumber()
+  @ApiProperty()
+  @IsOptional()
+  idUser: number;
 }

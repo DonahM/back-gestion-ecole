@@ -54,29 +54,32 @@ export class UserService {
     }
   }
 
-  async findOne(idUser: number): Promise<user> {
-    try {
-      const user = await this.prismaService.user.findFirstOrThrow({
-        where: {
-          idUser: idUser,
-        },
-      });
-      return user
-    } catch (error) {
-      throw exception(error);
+  async findOne(idUser: number): Promise<user | null> {
+    const user = await this.prismaService.user.findFirst({
+      where: { idUser },
+    });
+  
+    if (!user) {
+      throw new Error(`User with id ${idUser} not found.`);
     }
+  
+    return user;
   }
+  
 
-  async findAll(): Promise<user> {
+  async findAll(): Promise<user[]> {
     try {
-      const user = await this.prismaService.user.findFirstOrThrow({
+      const user = await this.prismaService.user.findMany({
         
       });
-      return user
+  
+      return user; // Ou la requête souhaitée pour récupérer d'autres utilisateurs
     } catch (error) {
-      throw exception(error);
+      console.error('Error:', error.message);
+      throw error; // Propager l'erreur pour qu'elle soit gérée en amont
     }
   }
+  
 
   async resetPassword(idUser: number, dto: ResetPasswordDto){
     const user = await this.prismaService.user.findUnique({

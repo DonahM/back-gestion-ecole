@@ -18,6 +18,7 @@ model user{
   logo        String     @db.VarChar(255)
   lieu        String     @db.VarChar(255)
   password    String     @db.VarChar(255)
+  etudiants   etudiants[]
 }
 
 model classE{
@@ -56,6 +57,8 @@ model etudiants{
   classE            classE?    @relation(fields: [idCls], references: [idCls], onDelete: NoAction, onUpdate: NoAction)
   idSchool          Int
   years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+  idUser            Int
+  user     user?    @relation(fields: [idUser], references: [idUser], onDelete: NoAction, onUpdate: NoAction)
   ecolages          ecolages[]
   matieres          matieres[]
   notes             notes[]
@@ -113,7 +116,7 @@ model salaires{
   idMat         Int
   etudiants     etudiants?    @relation(fields: [idEdt], references: [idEdt], onDelete: NoAction, onUpdate: NoAction)
   matieres      matieres?     @relation(fields: [idMat], references: [idMat], onDelete: NoAction, onUpdate: NoAction)
-  idSchool          Int
+  idSchool      Int
   years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
   idSem         Int
   semestre     semestre?    @relation(fields: [idSem], references: [idSem], onDelete: NoAction, onUpdate: NoAction)

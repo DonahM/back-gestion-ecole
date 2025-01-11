@@ -11,6 +11,7 @@ import { YearsSchoolModule } from './features/years_school/years_school.module';
 import { AuthClientModule } from './features/auth-client/auth-client.module';
 import { UserModule } from './features/user/user.module';
 import { AuthModule } from './features/auth/auth.module';
+import { SemestreModule } from './features/semestre/semestre.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AuthModule } from './features/auth/auth.module';
     NotesModule,
     YearsSchoolModule,
     AuthClientModule,
+    SemestreModule,
     UserModule,
     AuthModule
   ],
