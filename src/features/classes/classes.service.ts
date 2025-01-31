@@ -17,7 +17,8 @@ export class ClassesService {
           name: createClassesDto.name,
           titulaire: createClassesDto.titulaire,
           num: createClassesDto.num,
-          idSchool: createClassesDto.idSchool
+          idSchool: createClassesDto.idSchool,
+          idUser: createClassesDto.idUser
         },
       });
       return classE;
@@ -33,6 +34,7 @@ export class ClassesService {
           include:{
             etudiants:true,
             years_schools: true,
+            notes: true
           },
         }
       );

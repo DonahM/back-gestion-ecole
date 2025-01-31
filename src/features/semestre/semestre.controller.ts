@@ -82,9 +82,9 @@ export class SemestreController {
 
   @Get(':id')
   async findOne(@Param('id') idSem: string) {
-  const id = parseInt(idSem, 10); // Convertir l'ID en nombre
+  const id = parseInt(idSem, 10); 
   if (isNaN(id)) {
-    throw new HttpException('Invalid ID format', 400); // Gérer les ID invalides
+    throw new HttpException('Invalid ID format', 400);
   }
   return this.semestreService.findOne(id);
 }

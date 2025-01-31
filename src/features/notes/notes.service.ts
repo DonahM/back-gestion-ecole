@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { HttpException} from '@nestjs/common';
 import { notes } from '@prisma/client';
 import { join } from 'path';
@@ -61,25 +61,87 @@ export class NotesService {
         return files;
       }
     
-      async create(
-        dto: CreateNotesDto,
-      ): Promise<notes | HttpException> {
-        try {
-          const db = await this.prismaService.notes.create({
-            data: {
-              note: dto.note,
-              coefficient: dto.coefficient,
-              idEdt: dto.idEdt,
-              idMat: dto.idMat,
-              idSchool: dto.idSchool,
-              idSem: dto.idSem
-            },
-          });
-          return db;
-        } catch (error) {
-          throw exception(error);
-        }
+      // async create(dto: CreateNotesDto): Promise<notes | HttpException> {
+      //   try {
+      //     // Vérifier les entrées obligatoires
+      //     if (!dto.note || !dto.coefficient || !dto.idEdt || !dto.idMat || !dto.idSem || !dto.idSchool) {
+      //       throw new HttpException('Tous les champs sont requis', HttpStatus.BAD_REQUEST);
+      //     }
+      
+      //     // Vérification du semestre
+      //     const semestre = await this.prismaService.semestre.findUnique({
+      //       where: { idSem: dto.idSem }
+      //     });
+      //     if (!semestre) {
+      //       throw new HttpException(`Semestre introuvable pour idSem: ${dto.idSem}`, HttpStatus.NOT_FOUND);
+      //     }
+      
+      //     // Vérification de l'étudiant
+      //     const etudiant = await this.prismaService.etudiants.findUnique({
+      //       where: { idEdt: dto.idEdt }
+      //     });
+      //     if (!etudiant) {
+      //       throw new HttpException(`Étudiant introuvable pour idEdt: ${dto.idEdt}`, HttpStatus.NOT_FOUND);
+      //     }
+      
+      //     // Vérification de la matière
+      //     const matiere = await this.prismaService.matieres.findUnique({
+      //       where: { idMat: dto.idMat }
+      //     });
+      //     if (!matiere) {
+      //       throw new HttpException(`Matière introuvable pour idMat: ${dto.idMat}`, HttpStatus.NOT_FOUND);
+      //     }
+      
+      //     // Création de la note
+      //     const db = await this.prismaService.notes.create({
+      //       data: {
+      //         note: dto.note,
+      //         coefficient: dto.coefficient,
+      //         etudiants: { connect: { idEdt: dto.idEdt } },
+      //         matieres: { connect: { idMat: dto.idMat } },
+      //         years_schools: { connect: { idSchool: dto.idSchool } },
+      //         semestre: { connect: { idSem: dto.idSem } },
+      //         classE: { connect: { idCls: dto.idCls } },
+      //       }
+      //     });
+      
+      //     return db;
+      //   } catch (error) {
+      //     console.error('Error:', error);
+      //     throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      //   }
+      // }
+      
+      
+      async create(dto: CreateNotesDto): Promise<notes> {
+    try {
+      if (!dto.note || !dto.coefficient || !dto.idEdt || !dto.idMat || !dto.idSem || !dto.idSchool) {
+        throw new HttpException('Tous les champs sont requis', HttpStatus.BAD_REQUEST);
       }
+
+      const existingNote = await this.prismaService.notes.findFirst({
+        where: { idEdt: dto.idEdt, idMat: dto.idMat, idSem: dto.idSem },
+      });
+      if (existingNote) {
+        throw new HttpException('Note existante pour cet étudiant, matière et semestre', HttpStatus.CONFLICT);
+      }
+
+      return this.prismaService.notes.create({
+        data: {
+          note: dto.note,
+          coefficient: dto.coefficient,
+          etudiants: { connect: { idEdt: dto.idEdt } },
+          matieres: { connect: { idMat: dto.idMat } },
+          years_schools: { connect: { idSchool: dto.idSchool } },
+          semestre: { connect: { idSem: dto.idSem } },
+          classE: { connect: { idCls: dto.idCls } },
+        },
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
     
       async findAll() {
         try {

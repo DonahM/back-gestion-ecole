@@ -49,6 +49,7 @@ export class EtudiantsController {
   
   @Post()
   create(@Body() dto: CreateEtudiantsDto) {
+    console.log(dto.idUser)
     return this.etudiantsService.create(dto);
   }
 
@@ -91,8 +92,6 @@ export class EtudiantsController {
   }
   return this.etudiantsService.findOne(id);
 }
-
-  
 
   @Delete(':id')
   remove(@Param('id') IdCom: string) {

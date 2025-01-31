@@ -13,7 +13,7 @@ export class MatieresService {
       const matieres = await this.prismaService.matieres.create({
         data: {
           name: createMatieresDto.name,
-          idEdt: createMatieresDto.idEdt,
+          // idEdt: createMatieresDto.idEdt,
           idSchool: createMatieresDto.idSchool
         },
       });

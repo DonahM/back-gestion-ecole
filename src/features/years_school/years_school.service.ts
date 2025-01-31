@@ -11,7 +11,6 @@ import exception from 'src/core/errors/error_handler';
 export class YearsSchoolService {
     constructor(
         private prismaService: PrismaService,
-        // private tagHasBddService: TagHasBddService,
       ) {}
 
       async fetchDatabases(
@@ -143,7 +142,7 @@ export class YearsSchoolService {
               idSchool: idSchool,
             },
             include: {
-              matieres: true, // Assure-toi que la relation est bien incluse
+              matieres: true,
             },
           });
           return years_schools;

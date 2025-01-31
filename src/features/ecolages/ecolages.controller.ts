@@ -18,7 +18,7 @@ import { CreateEcolagesDto } from './dto/create-ecolages.dto';
 @Controller('ecolages')
 export class EcolagesController {
     constructor(private readonly ecolagesService: EcolagesService) {}
-    @Post()
+  @Post()
   async create(@Body() dto: CreateEcolagesDto) {
     return this.ecolagesService.create(dto)
   }

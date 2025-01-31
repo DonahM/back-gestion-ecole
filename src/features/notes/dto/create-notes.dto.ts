@@ -1,34 +1,40 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber,IsString, IsOptional } from 'class-validator';
+import { IsNumber ,IsOptional} from 'class-validator';
 
 export class CreateNotesDto {
-  @IsOptional()
+  @ApiProperty()
   @ApiProperty()
   @IsNumber()
   note: number;
-  
-  @IsOptional()
+
+  @ApiProperty()
   @ApiProperty()
   @IsNumber()
   coefficient: number;
 
-  @IsOptional()
+  @ApiProperty()
   @ApiProperty()
   @IsNumber()
   idEdt: number;
-  
-  @IsOptional()
+
+  @ApiProperty()
   @ApiProperty()
   @IsNumber()
   idMat: number;
 
-  @IsNumber()
   @ApiProperty()
-  @IsOptional()
+  @ApiProperty()
+  @IsNumber()
   idSchool: number;
-  
-  @IsNumber()
+
   @ApiProperty()
-  @IsOptional()
+  @ApiProperty()
+  @IsNumber()
   idSem: number;
+
+  @ApiProperty()
+  @ApiProperty()
+  @IsNumber()
+  idCls: number;
+
 }

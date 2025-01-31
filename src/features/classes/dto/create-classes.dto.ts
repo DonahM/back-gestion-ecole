@@ -21,5 +21,10 @@ export class CreateClassesDto {
   @ApiProperty()
   @IsOptional()
   idSchool: number;
+
+  @IsNumber()
+  @ApiProperty()
+  @IsOptional()
+  idUser: number;
   
 }

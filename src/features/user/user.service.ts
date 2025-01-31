@@ -1,5 +1,4 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-// import { Magasin } from '@prisma/client';
 import { PrismaService } from 'src/features/prisma/prisma.service';
 import { UserDto } from './dto/user.dto';
 import { user } from '@prisma/client';
@@ -15,146 +14,131 @@ export class UserService {
     private prismaService: PrismaService,
   ) {}
 
-  async createUser(
-    dto: UserDto,
-  ): Promise<user | HttpException> {
+  async createUser(dto: UserDto): Promise<user> {
     try {
-      const user = await this.prismaService.user.findFirst({
-        where: {
-          email: dto.email,
-        },
-      });
-      console.log(dto.email);
-      if (user != null) {
-        throw new HttpException(
-          {
-            message: `user already exist`,
-          },
-          HttpStatus.BAD_REQUEST,
-        );
+      const existingUser = await this.getUserByEmail(dto.email);
+
+      if (existingUser) {
+        throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
       }
+
       const hashedPassword = await argon2.hash(dto.password);
-      // const rolesAsString: string = dto.roles.join(' ');
       const rolesAsString = dto.roles.join(', ');
-      const res = await this.prismaService.user.create({
+
+      const newUser = await this.prismaService.user.create({
         data: {
           email: dto.email,
           name: dto.name,
-          surname:dto.surname,
-          cin:dto.cin,
-          roles: rolesAsString, 
-          logo:dto.logo,
+          surname: dto.surname,
+          cin: dto.cin,
+          roles: rolesAsString,
+          logo: dto.logo,
           lieu: dto.lieu,
           password: hashedPassword,
-        }
+        },
       });
-      return user
+
+      return newUser;
     } catch (error) {
-      throw error;
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   async findOne(idUser: number): Promise<user | null> {
-    const user = await this.prismaService.user.findFirst({
+    const user = await this.prismaService.user.findUnique({
       where: { idUser },
+      include: { 
+        etudiants: true,
+        classE: true
+       }, 
     });
-  
+
     if (!user) {
-      throw new Error(`User with id ${idUser} not found.`);
+      throw new BadRequestException(`User with ID ${idUser} not found.`);
     }
-  
+
     return user;
   }
-  
 
   async findAll(): Promise<user[]> {
     try {
-      const user = await this.prismaService.user.findMany({
-        
+      const users = await this.prismaService.user.findMany({
+        include: {
+          etudiants: true,
+          classE: true 
+        },
       });
-  
-      return user; // Ou la requête souhaitée pour récupérer d'autres utilisateurs
+
+      if (users.length === 0) {
+        throw new HttpException('Aucun utilisateur trouvé', HttpStatus.NOT_FOUND);
+      }
+
+      return users;
     } catch (error) {
-      console.error('Error:', error.message);
-      throw error; // Propager l'erreur pour qu'elle soit gérée en amont
+      console.error('Erreur lors de la récupération des utilisateurs:', error.message);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-  
 
-  async resetPassword(idUser: number, dto: ResetPasswordDto){
+  // Méthode pour réinitialiser le mot de passe
+  async resetPassword(idUser: number, dto: ResetPasswordDto) {
     const user = await this.prismaService.user.findUnique({
-      where: {
-          idUser:idUser,
-      }
-    })
+      where: { idUser },
+    });
 
-    if(!user) throw new BadRequestException('User does\'t esxist')
+    if (!user) throw new BadRequestException('User does not exist');
+
     const validPassword = await argon2.verify(user.password, dto.actualPassword);
-    if(!validPassword) throw new BadRequestException('Password does\'t match the actual password')
+    if (!validPassword) throw new BadRequestException('Password does not match the actual password');
 
     const hashedPassword = await argon2.hash(dto.newPassword);
 
-    const update = await this.prismaService.user.update({
-      where: {
-        idUser:idUser,
-      },
-      data: {
-        password: hashedPassword
-      }
-    })
-    return update;
+    return this.prismaService.user.update({
+      where: { idUser },
+      data: { password: hashedPassword },
+    });
   }
 
-  async resendPassword(dto: ResendPasswordDto){    
+  // Méthode pour renvoyer un mot de passe généré
+  async resendPassword(dto: ResendPasswordDto) {
     const user = await this.prismaService.user.findFirst({
-      where: {
-        email: dto.email
-      }
-    })
+      where: { email: dto.email },
+    });
 
-    if(!user) throw new BadRequestException('User does\'t esxist')
+    if (!user) throw new BadRequestException('User does not exist');
 
     const randomPasswd = generateRandomPassword();
-
     const hashedPassword = await argon2.hash(randomPasswd);
 
     await this.prismaService.user.update({
-      where: {
-        idUser: user.idUser
-      },
-      data: {
-        password: hashedPassword
-      }
+      where: { idUser: user.idUser },
+      data: { password: hashedPassword },
     });
+
     return randomPasswd;
   }
 
+  // Méthode pour mettre à jour un utilisateur
   async update(idUser: number, dto: UserDto) {
     try {
       const data: any = {};
-      if (dto.email != null) {
-        data.email = dto.email;
-      }
-      if (dto.name != null) {
-        data.name = dto.name;
-      }
-      if (dto.roles != null) {
-        data.roles = dto.roles;
-      }
-      if (dto.surname != null) {
-        data.surname = dto.surname;
-      }
-      const user = await this.prismaService.user.update({
-        data: {
-          ...data,
-        },
-        where: {
-          idUser: idUser,
-        },
+      if (dto.email != null) data.email = dto.email;
+      if (dto.name != null) data.name = dto.name;
+      if (dto.surname != null) data.surname = dto.surname;
+      if (dto.roles != null) data.roles = dto.roles.join(', ');
+
+      return this.prismaService.user.update({
+        where: { idUser },
+        data,
       });
-      return user;
     } catch (error) {
       throw exception(error);
     }
+  }
+
+  private async getUserByEmail(email: string): Promise<user | null> {
+    return this.prismaService.user.findFirst({
+      where: { email },
+    });
   }
 }

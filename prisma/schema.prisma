@@ -19,6 +19,7 @@ model user{
   lieu        String     @db.VarChar(255)
   password    String     @db.VarChar(255)
   etudiants   etudiants[]
+  classE      classE[]
 }
 
 model classE{
@@ -26,9 +27,15 @@ model classE{
   name        String     @db.VarChar(255)
   titulaire   String     @db.VarChar(255)
   num         String     @db.VarChar(255)
+  
   idSchool          Int
   years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+  
+  idUser          Int
+  user     user?    @relation(fields: [idUser], references: [idUser], onDelete: NoAction, onUpdate: NoAction)
+
   etudiants   etudiants[]
+  notes       notes[]
 }
 
 model etudiants{
@@ -53,14 +60,17 @@ model etudiants{
   ecole_anter       String     @db.VarChar(255)
   image             String     @db.VarChar(255)
   password          String     @db.VarChar(255)
+
   idCls             Int        
   classE            classE?    @relation(fields: [idCls], references: [idCls], onDelete: NoAction, onUpdate: NoAction)
+  
   idSchool          Int
   years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+  
   idUser            Int
   user     user?    @relation(fields: [idUser], references: [idUser], onDelete: NoAction, onUpdate: NoAction)
+  
   ecolages          ecolages[]
-  matieres          matieres[]
   notes             notes[]
 }
 
@@ -101,8 +111,6 @@ model salaires{
  model matieres{
   idMat         Int           @id @default(autoincrement())
   name          String        @db.VarChar(225)
-  idEdt         Int
-  etudiants     etudiants?    @relation(fields: [idEdt], references: [idEdt], onDelete: NoAction, onUpdate: NoAction)
   idSchool          Int
   years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
   notes         notes[]
@@ -116,10 +124,15 @@ model salaires{
   idMat         Int
   etudiants     etudiants?    @relation(fields: [idEdt], references: [idEdt], onDelete: NoAction, onUpdate: NoAction)
   matieres      matieres?     @relation(fields: [idMat], references: [idMat], onDelete: NoAction, onUpdate: NoAction)
+  
   idSchool      Int
   years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+  
   idSem         Int
   semestre     semestre?    @relation(fields: [idSem], references: [idSem], onDelete: NoAction, onUpdate: NoAction)
+  
+  idCls         Int
+  classE     classE?    @relation(fields: [idCls], references: [idCls], onDelete: NoAction, onUpdate: NoAction)
  }
 
 model semestre{

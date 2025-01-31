@@ -63,6 +63,7 @@ export class EtudiantsService {
       ): Promise<etudiants | HttpException> {
         try {
           const hashedPassword = await argon2.hash(dto.password);
+          console.log("test5: ", dto.idUser)
           const db = await this.prismaService.etudiants.create({
             data: {
               name: dto.name,
@@ -85,8 +86,21 @@ export class EtudiantsService {
               ecole_anter : dto.ecole_anter ,
               image: dto.image,
               password: hashedPassword,
-              idCls: dto.idCls,
-              idSchool: dto.idSchool
+              user: {
+                connect: {
+                  idUser: dto.idUser
+                }
+              },
+              classE: {
+                connect: {
+                  idCls: dto.idCls
+                }
+              },
+              years_schools: {
+                connect: {
+                  idSchool: dto.idSchool
+                }
+              }
             },
           });
           return db;
@@ -101,7 +115,7 @@ export class EtudiantsService {
             {
               include:{
                 ecolages:true,
-                matieres: true,
+                // matieres: true,
                 notes: true,
               },
             }
@@ -119,6 +133,7 @@ export class EtudiantsService {
               idEdt: {
                 equals: idEdt,
               },
+              
             },
             include: {
               classE: true,
@@ -154,7 +169,7 @@ export class EtudiantsService {
             include: {
               classE: true,
               ecolages: true,
-              notes: true // Assure-toi que la relation est bien incluse
+              // notes: true // Assure-toi que la relation est bien incluse
             },
           });
           return etudiants;

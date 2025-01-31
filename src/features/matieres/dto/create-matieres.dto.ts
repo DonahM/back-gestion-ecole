@@ -7,20 +7,20 @@ export class CreateMatieresDto {
   @IsString()
   name: string;
 
-  @IsOptional()
-  @ApiProperty()
-  @IsString()
-  titulaire: string;
+  // @IsOptional()
+  // @ApiProperty()
+  // @IsString()
+  // titulaire: string;
 
-  @IsOptional()
-  @ApiProperty()
-  @IsString()
-  num: string;
+  // @IsOptional()
+  // @ApiProperty()
+  // @IsString()
+  // num: string;
 
-  @IsOptional()
-  @ApiProperty()
-  @IsNumber()
-  idEdt: number;
+  // @IsOptional()
+  // @ApiProperty()
+  // @IsNumber()
+  // idEdt: number;
 
   @IsNumber()
   @ApiProperty()

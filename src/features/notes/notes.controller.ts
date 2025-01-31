@@ -2,6 +2,7 @@ import { Body, Controller,
     Delete,
     Get,
     HttpException,
+    HttpStatus,
     Param,
     Patch,
     Post,
@@ -43,10 +44,31 @@ export class NotesController {
     return files;
   }
   
-  @Post()
-  create(@Body() dto: CreateNotesDto) {
-    return this.notesService.create(dto);
+//   @Post()
+// async create(@Body() dto: CreateNotesDto): Promise<notes | HttpException> {
+//   return await this.notesService.create(dto);
+// }
+@Post()
+  async create(@Body() createNotesDto: CreateNotesDto): Promise<notes | HttpException> {
+    try {
+      const newNote = await this.notesService.create(createNotesDto);
+      return newNote;
+    } catch (error) {
+      // Retourner une exception HTTP en cas d'erreur
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
+
+  // @Post()
+  // create(@Body() dto: CreateNotesDto) {
+  //   return this.notesService.create(dto);
+  // }
 
   @Post('upload')
   @UseInterceptors(AnyFilesInterceptor())
@@ -76,12 +98,12 @@ export class NotesController {
 
   @Get(':id')
   async findOne(@Param('id') idNot: string) {
-  const id = parseInt(idNot, 10); // Convertir l'ID en nombre
-  if (isNaN(id)) {
-    throw new HttpException('Invalid ID format', 400); // Gérer les ID invalides
+    const id = parseInt(idNot, 10); // Convertir l'ID en nombre
+    if (isNaN(id)) {
+      throw new HttpException('Invalid ID format', 400); // Gérer les ID invalides
+    }
+    return this.notesService.findOne(id);
   }
-  return this.notesService.findOne(id);
-}
 
   
 
