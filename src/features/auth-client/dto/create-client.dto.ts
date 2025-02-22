@@ -3,7 +3,7 @@ import { IsNumber, IsNotEmpty, IsString } from 'class-validator';
 export class AuthClientDto {
   @IsNumber()
   @IsNotEmpty()
-  matricule: number;
+  idEdt: number;
 
   @IsString()
   @IsNotEmpty()

@@ -20,11 +20,6 @@ export class CreateClassesDto {
   @IsNumber()
   @ApiProperty()
   @IsOptional()
-  idSchool: number;
-
-  @IsNumber()
-  @ApiProperty()
-  @IsOptional()
   idUser: number;
   
 }

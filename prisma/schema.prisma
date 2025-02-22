@@ -22,23 +22,21 @@ model user{
   classE      classE[]
 }
 
-model classE{
+model classE {
   idCls       Int        @id @default(autoincrement())
   name        String     @db.VarChar(255)
   titulaire   String     @db.VarChar(255)
   num         String     @db.VarChar(255)
-  
-  idSchool          Int
-  years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
-  
-  idUser          Int
-  user     user?    @relation(fields: [idUser], references: [idUser], onDelete: NoAction, onUpdate: NoAction)
 
-  etudiants   etudiants[]
+  idUser      Int
+  user        user?      @relation(fields: [idUser], references: [idUser], onDelete: NoAction, onUpdate: NoAction)
+
+  etudiants   ClassE_Students[]
+  years_schools   ClassE_Years[]
   notes       notes[]
 }
 
-model etudiants{
+model etudiants {
   idEdt             Int        @id @default(autoincrement())
   name              String     @db.VarChar(255)
   surname           String     @db.VarChar(255)
@@ -61,17 +59,13 @@ model etudiants{
   image             String     @db.VarChar(255)
   password          String     @db.VarChar(255)
 
-  idCls             Int        
-  classE            classE?    @relation(fields: [idCls], references: [idCls], onDelete: NoAction, onUpdate: NoAction)
-  
-  idSchool          Int
-  years_schools     years_schools?    @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
-  
   idUser            Int
-  user     user?    @relation(fields: [idUser], references: [idUser], onDelete: NoAction, onUpdate: NoAction)
-  
+  user             user?       @relation(fields: [idUser], references: [idUser], onDelete: NoAction, onUpdate: NoAction)
+
   ecolages          ecolages[]
   notes             notes[]
+  classE         ClassE_Students[]
+  years_schools           Students_Years[]
 }
 
 model ecolages{
@@ -143,15 +137,59 @@ model semestre{
   notes           notes[]
 }
 
- model years_schools{
-  idSchool          Int           @id @default(autoincrement())
-  annee_scolaire    String        @db.VarChar(255)
-  etudiants         etudiants[]
-  ecolages          ecolages[]
-  matieres          matieres[]
-  notes             notes[]
-  salaires          salaires[]
-  classE            classE[]
-  professeurs       professeurs[]
-  semestre          semestre[]
- }
+ model years_schools {
+  idSchool       Int           @id @default(autoincrement())
+  annee_scolaire String        @db.VarChar(255)
+
+  etudiants      Students_Years[]
+  classE       ClassE_Years[]
+  ecolages       ecolages[]
+  matieres       matieres[]
+  notes          notes[]
+  salaires       salaires[]
+  professeurs    professeurs[]
+  semestre       semestre[]
+}
+
+
+/// Table de jointure entre `classE` et `etudiants`
+
+model ClassE_Students {
+  id           Int      @id @default(autoincrement())
+
+  idCls        Int
+  classE       classE   @relation(fields: [idCls], references: [idCls], onDelete: Cascade, onUpdate: Cascade)
+
+  idEdt        Int
+  etudiants     etudiants @relation(fields: [idEdt], references: [idEdt], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([idCls, idEdt]) // Évite la duplication
+}
+
+/// Table de jointure entre `classE` et `years_schools`
+
+model ClassE_Years {
+  id           Int      @id @default(autoincrement())
+
+  idCls        Int
+  classE       classE   @relation(fields: [idCls], references: [idCls], onDelete: Cascade, onUpdate: Cascade)
+
+  idSchool     Int
+  years_schools   years_schools @relation(fields: [idSchool], references: [idSchool], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([idCls, idSchool]) // Évite la duplication
+}
+
+/// Table de jointure entre `etudiants` et `years_schools`
+
+model Students_Years {
+  id           Int      @id @default(autoincrement())
+
+  idEdt        Int
+  etudiants     etudiants @relation(fields: [idEdt], references: [idEdt], onDelete: Cascade, onUpdate: Cascade)
+
+  idSchool     Int
+  years_schools   years_schools @relation(fields: [idSchool], references: [idSchool], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([idEdt, idSchool]) // Évite la duplication
+}

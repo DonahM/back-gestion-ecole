@@ -69,9 +69,9 @@ export class EtudiantsController {
     return this.etudiantsService.findByEtudiants(+idEdt);
   }
 
-  @Get('matricule/:matricule')
-  async findByMatricule(@Param('matricule', ParseIntPipe) matricule: number): Promise<etudiants[]> {
-    return this.etudiantsService.findByMatricule(matricule);
+  @Get('id/:idEdt')
+  async findByMatricule(@Param('idEdt', ParseIntPipe) idEdt: number): Promise<etudiants[]> {
+    return this.etudiantsService.findByMatricule(idEdt);
   }
 
   @Get('/count')

@@ -99,15 +99,6 @@ export class CreateEtudiantsDto {
   @IsString()
   password: string;
   
-  @IsNumber()
-  @ApiProperty()
-  @IsOptional()
-  idCls: number;
-
-  @IsNumber()
-  @ApiProperty()
-  @IsOptional()
-  idSchool: number;
 
   @IsNumber()
   @ApiProperty()

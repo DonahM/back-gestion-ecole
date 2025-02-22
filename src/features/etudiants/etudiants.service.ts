@@ -91,16 +91,16 @@ export class EtudiantsService {
                   idUser: dto.idUser
                 }
               },
-              classE: {
-                connect: {
-                  idCls: dto.idCls
-                }
-              },
-              years_schools: {
-                connect: {
-                  idSchool: dto.idSchool
-                }
-              }
+              // classE: {
+              //   connect: {
+              //     idCls: dto.idCls
+              //   }
+              // },
+              // years_schools: {
+              //   connect: {
+              //     idSchool: dto.idSchool
+              //   }
+              // }
             },
           });
           return db;
@@ -116,6 +116,8 @@ export class EtudiantsService {
               include:{
                 ecolages:true,
                 // matieres: true,
+                years_schools:true,
+                classE: true,
                 notes: true,
               },
             }
@@ -145,12 +147,12 @@ export class EtudiantsService {
         }
       }
       
-      async findByMatricule(matricule: number): Promise<etudiants[]> {
+      async findByMatricule(idEdt: number): Promise<etudiants[]> {
         try {
           const etudiants = await this.prismaService.etudiants.findMany({
             where: {
-              matricule: {
-                equals: matricule,
+              idEdt: {
+                equals: idEdt,
               },
             },
           });
@@ -208,9 +210,7 @@ export class EtudiantsService {
               adress_titeur: updateEtudiantsDto.adress_titeur,
               ecole_anter : updateEtudiantsDto.ecole_anter ,
               image: updateEtudiantsDto.image,
-              password: updateEtudiantsDto.password,
-              idCls: updateEtudiantsDto.idCls,
-              idSchool: updateEtudiantsDto.idSchool
+              password: updateEtudiantsDto.password
             },
           });
           return updatedEtudiants;

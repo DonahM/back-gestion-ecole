@@ -8,11 +8,11 @@ export class AuthClientService {
   constructor(private prisma: PrismaService) {}
 
   async authenticate(loginDto: AuthClientDto): Promise<any> {
-    const { matricule, password } = loginDto;
+    const { idEdt, password } = loginDto;
 
     // Rechercher l'étudiant par matricule
     const etudiant = await this.prisma.etudiants.findFirst({
-      where: { matricule },
+      where: { idEdt },
     });
 
     console.log('Étudiant trouvé:', etudiant);
@@ -32,7 +32,7 @@ export class AuthClientService {
     return {
       success: true,
       data: {
-        matricule: etudiant.matricule,
+        idEdt: etudiant.idEdt,
         name: etudiant.name,
       },
     };
