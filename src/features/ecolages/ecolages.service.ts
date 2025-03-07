@@ -37,6 +37,7 @@ export class EcolagesService {
               annee_scolaire: true, // Inclure l'année scolaire
             },
           },
+          etudiants: true
         },
       });
       return ecolages;
@@ -53,7 +54,8 @@ export class EcolagesService {
           idEco: idEco,
         },
         include: {
-          etudiants: true // Assure-toi que la relation est bien incluse
+          etudiants: true, // Assure-toi que la relation est bien incluse
+          years_schools: true
         },
       });
       return ecolages;

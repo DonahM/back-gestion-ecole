@@ -28,11 +28,13 @@ model classE {
   titulaire   String     @db.VarChar(255)
   num         String     @db.VarChar(255)
 
+  idSchool    Int
+  years_schools        years_schools?      @relation(fields: [idSchool], references: [idSchool], onDelete: NoAction, onUpdate: NoAction)
+
   idUser      Int
   user        user?      @relation(fields: [idUser], references: [idUser], onDelete: NoAction, onUpdate: NoAction)
 
   etudiants   ClassE_Students[]
-  years_schools   ClassE_Years[]
   notes       notes[]
 }
 
@@ -142,7 +144,7 @@ model semestre{
   annee_scolaire String        @db.VarChar(255)
 
   etudiants      Students_Years[]
-  classE       ClassE_Years[]
+  classE         classE[]
   ecolages       ecolages[]
   matieres       matieres[]
   notes          notes[]
@@ -166,19 +168,6 @@ model ClassE_Students {
   @@unique([idCls, idEdt]) // Évite la duplication
 }
 
-/// Table de jointure entre `classE` et `years_schools`
-
-model ClassE_Years {
-  id           Int      @id @default(autoincrement())
-
-  idCls        Int
-  classE       classE   @relation(fields: [idCls], references: [idCls], onDelete: Cascade, onUpdate: Cascade)
-
-  idSchool     Int
-  years_schools   years_schools @relation(fields: [idSchool], references: [idSchool], onDelete: Cascade, onUpdate: Cascade)
-
-  @@unique([idCls, idSchool]) // Évite la duplication
-}
 
 /// Table de jointure entre `etudiants` et `years_schools`
 

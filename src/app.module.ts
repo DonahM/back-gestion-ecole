@@ -15,7 +15,6 @@ import { SemestreModule } from './features/semestre/semestre.module';
 import { ClassEStudentsController } from './features/class-e_students/class-e_students.controller';
 import { ClassEStudentsModule } from './features/class-e_students/class-e_students.module';
 import { StudentsYearsModule } from './features/students_years/students_years.module';
-import { ClassEYearsModule } from './features/class-e_years/class-e_years.module';
 
 @Module({
   imports: [
@@ -34,7 +33,6 @@ import { ClassEYearsModule } from './features/class-e_years/class-e_years.module
     AuthModule,
     ClassEStudentsModule,
     StudentsYearsModule,
-    ClassEYearsModule
   ],
   controllers: [],
   providers: [],
